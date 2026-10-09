@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101010">
+  <title>Afterglow — Stories worth staying in for</title>
+  <meta name="description" content="Find your next favorite story on Afterglow, a cinematic streaming discovery experience.">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Afterglow home">Afterglow</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a class="active" href="#" data-view="home">Home</a>
+      <a href="#" data-view="series">Series</a>
+      <a href="#" data-view="films">Films</a>
+      <a href="#" data-view="my-list">My List</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="search-wrap" id="searchWrap">
+        <button class="icon-button" id="searchToggle" aria-label="Open search" title="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+        </button>
+        <input class="search-input" id="searchInput" type="search" placeholder="Titles, genres..." aria-label="Search titles">
+      </div>
+      <button class="icon-button" id="bellButton" aria-label="Notifications" title="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"></path></svg>
+      </button>
+      <button class="avatar" id="profileButton" aria-label="Profile: Alex" title="Alex">A</button>
+    </div>
+  </header>
+
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="hero-art" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="eyebrow-mark">▰▰</span> Afterglow original</div>
+      <h1 id="heroTitle">The Last<br>Light</h1>
+      <p class="hero-tagline">When the world goes quiet, listen.</p>
+      <p class="hero-description">At the edge of a changing world, one cartographer discovers a signal that could lead humanity home—or erase its final map.</p>
+      <div class="hero-meta"><strong>98% Match</strong> &nbsp; 2026 &nbsp; 1 Season &nbsp; <span aria-label="Rated 16 plus">16+</span></div>
+      <div class="hero-buttons">
+        <button class="button" id="heroPlay">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg> Play
+        </button>
+        <button class="button secondary" id="heroInfo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5m0-8h.01"></path></svg> More Info
+        </button>
+      </div>
+    </div>
+    <div class="rating"><span>ⓘ</span> 4K Ultra HD</div>
+  </section>
+
+  <main>
+    <div class="genre-bar" id="genreBar" aria-label="Filter by genre">
+      <button class="genre-chip selected" data-genre="All">Explore All</button>
+      <button class="genre-chip" data-genre="Drama">Drama</button>
+      <button class="genre-chip" data-genre="Sci-Fi">Sci-Fi</button>
+      <button class="genre-chip" data-genre="Mystery">Mystery</button>
+      <button class="genre-chip" data-genre="Comedy">Comedy</button>
+      <button class="genre-chip" data-genre="Adventure">Adventure</button>
+      <button class="genre-chip" data-genre="Documentary">Documentary</button>
+    </div>
+    <div id="shelves"></div>
+    <p class="empty-state" id="emptyState">No titles found. Try another search or genre.</p>
+  </main>
+
+  <footer>
+    <p>Afterglow is a front-end demo. All titles and artwork are fictional; no videos are streamed.</p>
+    <p>Afterglow · Built for stories worth staying in for.</p>
+  </footer>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close dialog">×</button>
+      <div class="modal-art" id="modalArt"><h2 id="modalTitle"></h2></div>
+      <div class="modal-body">
+        <div class="modal-meta"><span class="match" id="modalMatch"></span><span id="modalYear"></span><span id="modalRating"></span><span id="modalGenre"></span></div>
+        <p class="modal-description" id="modalDescription"></p>
+        <div class="modal-actions">
+          <button class="button" id="modalPlay"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg> Play</button>
+          <button class="button secondary" id="modalList">＋ My List</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
