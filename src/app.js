@@ -1,4 +1,4 @@
-import { titles } from "./catalog.js";
+import { titles } from "./catalog.js?v=cinema-artwork";
 
     const groups = [
       { id: "trending", title: "Trending Now", select: item => item.match >= 94 },
@@ -99,10 +99,10 @@ import { titles } from "./catalog.js";
       card.tabIndex = 0;
       card.setAttribute("role", "button");
       card.setAttribute("aria-label", `More about ${item.title}`);
-      card.innerHTML = `<div class="poster"><span class="poster-mark">${item.mark}</span><span class="poster-title"></span></div><div class="card-info"><p class="card-title"></p><p class="card-subtitle"><span class="match">${item.match}% Match</span> · ${item.year} · ${item.rating}</p></div>`;
+      card.innerHTML = `<div class="poster"><img class="poster-image" alt="" loading="lazy" decoding="async"><span class="poster-mark">${item.kind}</span><span class="poster-title"></span><span class="poster-action">View details <span aria-hidden="true">↗</span></span></div><div class="card-info"><p class="card-title">${item.genre} · ${item.kind}</p><p class="card-subtitle"><span class="match">${item.match}% Match</span> · ${item.year} · ${item.rating}</p></div>`;
       card.querySelector(".poster").style.setProperty("--poster", item.color);
+      card.querySelector(".poster-image").src = item.image;
       card.querySelector(".poster-title").textContent = item.title;
-      card.querySelector(".card-title").textContent = item.title;
       card.addEventListener("click", () => openDetails(item));
       card.addEventListener("keydown", event => {
         if (event.key === "Enter" || event.key === " ") {
@@ -118,6 +118,7 @@ import { titles } from "./catalog.js";
       currentModalTitle = item;
       document.getElementById("modalTitle").textContent = item.title;
       document.getElementById("modalArt").style.setProperty("--poster", item.color);
+      document.getElementById("modalArt").style.setProperty("--poster-image", `url("${new URL(item.image, document.baseURI).href}")`);
       document.getElementById("modalMatch").textContent = `${item.match}% Match`;
       document.getElementById("modalYear").textContent = item.year;
       document.getElementById("modalRating").textContent = item.rating;

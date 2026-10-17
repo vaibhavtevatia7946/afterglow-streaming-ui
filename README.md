@@ -2,17 +2,17 @@
 
 A cinematic streaming-discovery experience built with vanilla HTML, CSS, and JavaScript. Browse fictional series and films, filter by genre, and save a personal watchlist on your device.
 
-> This independent front-end demo uses fictional titles and CSS-generated artwork. It is not affiliated with any streaming service and does not stream video.
+> This independent front-end demo uses fictional titles and illustrative photography from Unsplash. It is not affiliated with any streaming service and does not stream video. The images are artwork only, not official posters for real films or series.
 
 ## Features
 
-- Responsive, cinematic dark interface with original poster art
+- Responsive, cinematic dark interface with locally bundled title artwork
 - Home, Series, Films, and My List views
 - Live search by title, genre, or description
 - Genre filters and horizontally scrolling shelves
 - Title details and keyboard-accessible dialog
 - Persistent watchlist using browser local storage
-- No dependencies, build step, or third-party assets
+- No dependencies or build step; artwork is bundled locally
 
 ## Run locally
 
@@ -29,6 +29,8 @@ Then open <http://localhost:8000>.
 ```text
 .
 ├── index.html
+├── assets/
+│   └── posters/
 ├── favicon.svg
 └── src/
     ├── app.js
@@ -36,7 +38,7 @@ Then open <http://localhost:8000>.
     └── styles.css
 ```
 
-Edit `src/catalog.js` to change the fictional catalog. `src/app.js` and `src/styles.css` contain the application behavior and styling.
+Edit `src/catalog.js` to change the fictional catalog. `src/app.js` and `src/styles.css` contain the application behavior and styling. Illustrative title images from [Unsplash](https://unsplash.com) are stored in `assets/posters/`.
 
 ## Deploy on GitHub Pages
 
