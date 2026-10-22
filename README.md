@@ -53,5 +53,3 @@
 - **Unidirectional State Synchronization:** Filter queries and watchlist additions flow through a deterministic single-store pattern synced to `localStorage`.
 - **GPU-Accelerated Compositing:** Poster hover scaling and modal entrances leverage `transform` and `opacity` properties to prevent costly browser reflows and guarantee steady 60fps frame rates.
 - **Tokenized Theming:** Built on reusable CSS Custom Properties for typography scales, elevation layers, and glassmorphic blur filters.
-
-
