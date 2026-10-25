@@ -1,4 +1,4 @@
-<div align="center">
+..<div align="center">
 
 # ✦ Afterglow ✦
 ### `~/ cinematic-streaming-ui`
