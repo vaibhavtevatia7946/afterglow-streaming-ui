@@ -1,5 +1,5 @@
 <div align="center">
-AND
+
 # ✦ Afterglow ✦
 ### `~/ cinematic-streaming-ui`
 
