@@ -1,4 +1,4 @@
-L<div align="center">
+<div align="center">
 
 # ✦ Afterglow ✦
 ### A cinematic home for your next story
