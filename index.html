@@ -28,7 +28,7 @@
       <button class="icon-button" id="bellButton" aria-label="Notifications" title="Notifications">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"></path></svg>
       </button>
-      <button class="avatar" id="profileButton" aria-label="Profile: Alex" title="Alex">A</button>
+      <button class="avatar" id="profileButton" aria-label="Sign in" title="Sign in">↗</button>
     </div>
   </header>
 
@@ -67,7 +67,7 @@
   </main>
 
   <footer>
-    <p>Afterglow is a front-end demo. Titles and storylines are fictional; artwork is illustrative, and no videos are streamed.</p>
+    <p>Titles and storylines are fictional; artwork is illustrative, and no videos are streamed. Sign in to save your list across devices.</p>
     <p>Afterglow · Built for stories worth staying in for.</p>
   </footer>
 
@@ -86,6 +86,31 @@
     </section>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="modal-backdrop account-backdrop" id="accountBackdrop" role="presentation">
+    <section class="account-modal" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+      <button class="modal-close" id="accountClose" aria-label="Close account dialog">×</button>
+      <div class="account-kicker">Your Afterglow</div>
+      <h2 id="accountTitle">Keep your stories close.</h2>
+      <p class="account-intro">Sign in to carry your watchlist across devices.</p>
+      <form id="authForm" class="auth-form">
+        <label for="accountEmail">Email address</label>
+        <input id="accountEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254">
+        <label for="accountPassword">Password</label>
+        <input id="accountPassword" name="password" type="password" autocomplete="current-password" placeholder="At least 10 characters" required minlength="10" maxlength="72">
+        <p class="auth-error" id="authError" role="alert"></p>
+        <button class="button auth-submit" id="authSubmit" type="submit">Sign in</button>
+      </form>
+      <div class="account-signed-in" id="accountSignedIn" hidden>
+        <div class="account-avatar" id="accountAvatar">A</div>
+        <p class="account-email" id="accountEmailLabel"></p>
+        <p class="account-sync-note">Your saved titles are synced to your account.</p>
+        <button class="button secondary auth-submit" id="signOutButton" type="button">Sign out</button>
+      </div>
+      <p class="auth-switch" id="authSwitch">New here? <button type="button" id="authModeButton">Create an account</button></p>
+      <p class="account-footnote">This demo stores account details and watchlists on its server. Never reuse a sensitive password.</p>
+    </section>
+  </div>
 
   <script type="module" src="./src/app.js?v=cinema-artwork"></script>
 </body>

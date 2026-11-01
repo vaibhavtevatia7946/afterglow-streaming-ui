@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: afterglow
+    runtime: node
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    disk:
+      name: afterglow-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: SQLITE_PATH
+        value: /var/data/afterglow.sqlite
