@@ -27,6 +27,17 @@ import { titles as fallbackTitles } from "./catalog.js?v=cinema-artwork";
     const accountBackdrop = document.getElementById("accountBackdrop");
     const authForm = document.getElementById("authForm");
     const authError = document.getElementById("authError");
+    const openingScreen = document.getElementById("openingScreen");
+
+    function dismissOpeningScreen() {
+      if (!openingScreen?.isConnected) return;
+      openingScreen.classList.add("is-leaving");
+      window.setTimeout(() => openingScreen.remove(), 750);
+    }
+
+    document.getElementById("skipIntro").addEventListener("click", dismissOpeningScreen);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) openingScreen.remove();
+    else window.setTimeout(() => openingScreen.remove(), 2300);
 
     async function apiRequest(path, options = {}) {
       const response = await fetch(path, {

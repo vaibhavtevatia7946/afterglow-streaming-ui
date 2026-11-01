@@ -7,9 +7,18 @@
   <title>Afterglow — Stories worth staying in for</title>
   <meta name="description" content="Find your next favorite story on Afterglow, a cinematic streaming discovery experience.">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./src/styles.css?v=cinema-artwork">
+  <link rel="stylesheet" href="./src/styles.css?v=opening-intro">
 </head>
 <body>
+  <div class="opening-screen" id="openingScreen" aria-label="Afterglow opening animation">
+    <div class="opening-scene" aria-hidden="true">
+      <div class="opening-emblem"><span class="emblem-core"></span><span class="emblem-flare"></span></div>
+      <p class="opening-wordmark">Afterglow</p>
+      <p class="opening-line">Stories worth staying in for</p>
+    </div>
+    <button class="opening-skip" id="skipIntro" type="button">Skip intro</button>
+  </div>
+
   <header class="topbar">
     <a class="brand" href="#" aria-label="Afterglow home">Afterglow</a>
     <nav class="nav-links" aria-label="Main navigation">
@@ -112,6 +121,6 @@
     </section>
   </div>
 
-  <script type="module" src="./src/app.js?v=cinema-artwork"></script>
+  <script type="module" src="./src/app.js?v=opening-intro"></script>
 </body>
 </html>

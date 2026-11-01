@@ -22,6 +22,107 @@
       outline-offset: 3px;
     }
 
+    .opening-screen {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 47%, rgba(216,105,88,.2), transparent 27%),
+        radial-gradient(ellipse at 50% 50%, #1d1a20 0%, #101011 62%);
+      animation: opening-exit .72s 1.52s cubic-bezier(.65,0,.35,1) forwards;
+    }
+    .opening-screen::before, .opening-screen::after {
+      position: absolute;
+      inset: -40%;
+      border: 1px solid rgba(242,165,128,.08);
+      border-radius: 50%;
+      content: "";
+      animation: opening-halo 2.8s ease-out both;
+    }
+    .opening-screen::after { inset: -28%; animation-delay: .16s; opacity: .7; }
+    @keyframes opening-halo { from { transform: scale(.76); opacity: 0; } 30% { opacity: .75; } to { transform: scale(1.06); opacity: 0; } }
+    .opening-screen.is-leaving { animation-delay: 0s; }
+    @keyframes opening-exit { to { opacity: 0; visibility: hidden; } }
+    .opening-scene { display: grid; justify-items: center; transform: translateY(-8px); }
+    .opening-emblem {
+      position: relative;
+      display: grid;
+      width: 82px;
+      height: 82px;
+      place-items: center;
+      border: 1px solid rgba(255,218,191,.56);
+      border-radius: 50%;
+      box-shadow: 0 0 35px rgba(231,117,93,.2), inset 0 0 30px rgba(232,143,103,.12);
+      animation: emblem-arrive .95s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .opening-emblem::before, .opening-emblem::after {
+      position: absolute;
+      inset: 9px -7px;
+      border: 1px solid rgba(235,169,134,.38);
+      border-radius: 50%;
+      content: "";
+      transform: rotate(-32deg);
+    }
+    .opening-emblem::after { inset: -7px 9px; transform: rotate(32deg); border-color: rgba(243,205,170,.26); }
+    .emblem-core {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #ffe3c2, #ef9b70 42%, #bd514f 76%);
+      box-shadow: 0 0 28px rgba(249,147,104,.8);
+      animation: core-pulse 1.25s ease-in-out infinite alternate;
+    }
+    .emblem-flare {
+      position: absolute;
+      width: 2px;
+      height: 98px;
+      background: linear-gradient(transparent, #ffdbb8, transparent);
+      filter: drop-shadow(0 0 8px #ffbe95);
+      transform: rotate(45deg);
+      animation: flare-in .8s .22s both;
+    }
+    @keyframes emblem-arrive { from { opacity: 0; transform: scale(.72) rotate(-18deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+    @keyframes core-pulse { to { transform: scale(1.14); filter: brightness(1.12); } }
+    @keyframes flare-in { from { opacity: 0; transform: rotate(45deg) scaleY(.2); } to { opacity: .82; transform: rotate(45deg) scaleY(1); } }
+    .opening-wordmark {
+      margin: 28px 0 0;
+      color: #f4eee9;
+      font-size: clamp(38px, 7vw, 59px);
+      font-weight: 950;
+      letter-spacing: .15em;
+      line-height: 1;
+      text-transform: uppercase;
+      text-shadow: 0 0 30px rgba(229,134,111,.24);
+      animation: wordmark-arrive .78s .24s both;
+    }
+    @keyframes wordmark-arrive { from { opacity: 0; letter-spacing: .42em; filter: blur(8px); } to { opacity: 1; letter-spacing: .15em; filter: blur(0); } }
+    .opening-line {
+      margin: 13px 0 0;
+      color: #b9aaa4;
+      font-size: 11px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      animation: line-arrive .65s .52s both;
+    }
+    @keyframes line-arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: .86; transform: translateY(0); } }
+    .opening-skip {
+      position: absolute;
+      right: max(22px, 4vw);
+      bottom: max(20px, 4vh);
+      padding: 8px 13px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      background: rgba(15,15,16,.4);
+      color: #ddd;
+      font-size: 11px;
+      letter-spacing: .05em;
+      cursor: pointer;
+    }
+    .opening-skip:hover { background: rgba(255,255,255,.12); }
+
     .topbar {
       position: fixed;
       z-index: 5;
@@ -479,4 +580,5 @@
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition-duration: .01ms !important; }
+      .opening-screen { display: none; }
     }
