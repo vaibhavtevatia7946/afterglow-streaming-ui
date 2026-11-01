@@ -1,0 +1,19 @@
+{
+  "name": "afterglow-streaming-ui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A cinematic streaming discovery app with accounts and synced watchlists.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.2.0",
+    "express": "^5.1.0"
+  }
+}

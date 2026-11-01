@@ -1,4 +1,6 @@
-import { titles } from "./catalog.js?v=cinema-artwork";
+import { titles as fallbackTitles } from "./catalog.js?v=cinema-artwork";
+
+    let titles = fallbackTitles;
 
     const groups = [
       { id: "trending", title: "Trending Now", select: item => item.match >= 94 },
@@ -8,7 +10,9 @@ import { titles } from "./catalog.js?v=cinema-artwork";
     ];
     const STORAGE_KEY = "afterglow.my-list";
     let toastTimeout;
-    const myList = loadMyList();
+    let myList = loadMyList();
+    let currentUser = null;
+    let authMode = "login";
     let activeView = "home";
     let activeGenre = "All";
     let searchQuery = "";
@@ -20,6 +24,85 @@ import { titles } from "./catalog.js?v=cinema-artwork";
     const modalBackdrop = document.getElementById("modalBackdrop");
     const searchWrap = document.getElementById("searchWrap");
     const searchInput = document.getElementById("searchInput");
+    const accountBackdrop = document.getElementById("accountBackdrop");
+    const authForm = document.getElementById("authForm");
+    const authError = document.getElementById("authError");
+    const openingScreen = document.getElementById("openingScreen");
+
+    function dismissOpeningScreen() {
+      if (!openingScreen?.isConnected) return;
+      openingScreen.classList.add("is-leaving");
+      window.setTimeout(() => openingScreen.remove(), 750);
+    }
+
+    document.getElementById("skipIntro").addEventListener("click", dismissOpeningScreen);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) openingScreen.remove();
+    else window.setTimeout(() => openingScreen.remove(), 2300);
+
+    async function apiRequest(path, options = {}) {
+      const response = await fetch(path, {
+        credentials: "same-origin",
+        ...options,
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) }
+      });
+      const payload = response.status === 204 ? {} : await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || "Could not connect to Afterglow.");
+      return payload;
+    }
+
+    async function syncWatchlist() {
+      if (!currentUser) return;
+      try {
+        await apiRequest("/api/watchlist", { method: "PUT", body: JSON.stringify({ watchlist: [...myList] }) });
+      } catch (error) {
+        showToast(error.message);
+      }
+    }
+
+    function updateProfileButton() {
+      const button = document.getElementById("profileButton");
+      const label = currentUser ? currentUser.email : "Sign in";
+      button.textContent = currentUser ? currentUser.email.slice(0, 1).toUpperCase() : "↗";
+      button.setAttribute("aria-label", currentUser ? `Account: ${label}` : "Sign in");
+      button.title = label;
+    }
+
+    function updateAccountDialog() {
+      const signedIn = Boolean(currentUser);
+      document.getElementById("accountTitle").textContent = signedIn ? "Welcome back." : "Keep your stories close.";
+      document.querySelector(".account-intro").textContent = signedIn
+        ? "Your watchlist is ready wherever you sign in."
+        : "Sign in to carry your watchlist across devices.";
+      authForm.hidden = signedIn;
+      document.getElementById("accountSignedIn").hidden = !signedIn;
+      document.getElementById("authSwitch").hidden = signedIn;
+      document.getElementById("accountEmailLabel").textContent = currentUser?.email || "";
+      document.getElementById("accountAvatar").textContent = currentUser?.email.slice(0, 1).toUpperCase() || "A";
+      document.getElementById("accountPassword").autocomplete = authMode === "register" ? "new-password" : "current-password";
+      document.getElementById("accountPassword").placeholder = authMode === "register" ? "At least 10 characters" : "Your password";
+      document.getElementById("authSubmit").textContent = authMode === "register" ? "Create account" : "Sign in";
+      document.getElementById("authModeButton").textContent = authMode === "register" ? "Sign in" : "Create an account";
+      document.getElementById("authSwitch").firstChild.textContent = authMode === "register" ? "Already have an account? " : "New here? ";
+      updateProfileButton();
+    }
+
+    async function initializeApp() {
+      try {
+        const catalog = await apiRequest("/api/titles");
+        if (Array.isArray(catalog.titles) && catalog.titles.length) titles = catalog.titles;
+        const session = await apiRequest("/api/session");
+        currentUser = session.user;
+        if (currentUser) {
+          myList = new Set([...myList, ...(session.watchlist || [])]);
+          await syncWatchlist();
+        }
+      } catch (error) {
+        // Static previews keep working without a running API server.
+        console.info("Afterglow account sync is unavailable in this preview.", error.message);
+      }
+      updateProfileButton();
+      renderShelves();
+    }
 
     function loadMyList() {
       try {
@@ -219,6 +302,7 @@ import { titles } from "./catalog.js?v=cinema-artwork";
       }
       updateListButton();
       renderShelves();
+      if (currentUser) syncWatchlist();
     });
     document.getElementById("modalPlay").addEventListener("click", () => {
       if (currentModalTitle) showToast(`Preview for ${currentModalTitle.title} is coming soon`);
@@ -226,6 +310,84 @@ import { titles } from "./catalog.js?v=cinema-artwork";
     document.getElementById("heroPlay").addEventListener("click", () => showToast("The Last Light preview is coming soon"));
     document.getElementById("heroInfo").addEventListener("click", () => openDetails(titles[0]));
     document.getElementById("bellButton").addEventListener("click", () => showToast("You're all caught up"));
-    document.getElementById("profileButton").addEventListener("click", () => showToast("You're watching as Alex"));
-
-    renderShelves();
+    document.getElementById("profileButton").addEventListener("click", () => {
+      previouslyFocusedElement = document.activeElement;
+      authError.textContent = "";
+      updateAccountDialog();
+      accountBackdrop.classList.add("open");
+      if (currentUser) document.getElementById("signOutButton").focus();
+      else document.getElementById("accountEmail").focus();
+    });
+    function closeAccountDialog() {
+      accountBackdrop.classList.remove("open");
+      if (previouslyFocusedElement instanceof HTMLElement) previouslyFocusedElement.focus();
+    }
+    document.getElementById("accountClose").addEventListener("click", closeAccountDialog);
+    accountBackdrop.addEventListener("click", event => { if (event.target === accountBackdrop) closeAccountDialog(); });
+    document.getElementById("authModeButton").addEventListener("click", () => {
+      authMode = authMode === "login" ? "register" : "login";
+      authForm.reset();
+      authError.textContent = "";
+      updateAccountDialog();
+      document.getElementById("accountEmail").focus();
+    });
+    authForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      const submit = document.getElementById("authSubmit");
+      const credentials = Object.fromEntries(new FormData(authForm));
+      submit.disabled = true;
+      submit.textContent = authMode === "register" ? "Creating account…" : "Signing in…";
+      authError.textContent = "";
+      try {
+        const result = await apiRequest(`/api/${authMode}`, { method: "POST", body: JSON.stringify(credentials) });
+        currentUser = result.user;
+        const remoteList = await apiRequest("/api/watchlist");
+        myList = new Set([...myList, ...(remoteList.watchlist || [])]);
+        await syncWatchlist();
+        saveMyList();
+        authError.textContent = "";
+        updateAccountDialog();
+        renderShelves();
+        showToast(`You're signed in as ${currentUser.email}`);
+      } catch (error) {
+        authError.textContent = error.message.includes("Failed to fetch")
+          ? "Account sign-in needs the Afterglow server. Start it with npm start."
+          : error.message;
+      } finally {
+        submit.disabled = false;
+        updateAccountDialog();
+      }
+    });
+    document.getElementById("signOutButton").addEventListener("click", async () => {
+      try {
+        await apiRequest("/api/logout", { method: "POST", body: "{}" });
+        currentUser = null;
+        myList = new Set();
+        localStorage.removeItem(STORAGE_KEY);
+        activeView = "home";
+        document.querySelectorAll(".nav-links a").forEach(link => link.classList.toggle("active", link.dataset.view === "home"));
+        updateAccountDialog();
+        renderShelves();
+        showToast("You're signed out.");
+      } catch (error) {
+        document.getElementById("authError").textContent = error.message;
+      }
+    });
+    document.addEventListener("keydown", event => {
+      if (!accountBackdrop.classList.contains("open")) return;
+      if (event.key === "Escape") closeAccountDialog();
+      if (event.key === "Tab") {
+        const focusable = [...accountBackdrop.querySelectorAll("button:not([disabled]), input:not([disabled])")]
+          .filter(element => !element.closest("[hidden]"));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+    initializeApp();

@@ -1,2 +1,10 @@
 .DS_Store
 .vscode/
+.env
+.env.*
+!.env.example
+node_modules/
+data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
