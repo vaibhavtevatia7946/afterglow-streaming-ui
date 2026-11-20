@@ -71,7 +71,7 @@ All endpoints are same-origin and return JSON.
 | `GET` | `/api/watchlist` | Read the signed-in user's list |
 | `PUT` | `/api/watchlist` | Replace it with `{ "watchlist": ["title"] }` |
 
-## Project structures
+## Project structure
 
 ```text
 assets/posters/   Curated local artwork
